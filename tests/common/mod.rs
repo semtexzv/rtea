@@ -29,6 +29,7 @@ impl TestInterpreter {
     }
 
     pub fn as_ref(&self) -> &Interpreter {
-        Interpreter::from_raw(self.as_ptr()).unwrap()
+        unimplemented!()
+        // Interpreter::from_raw(self.interp.as_ffi()).unwrap()
     }
 }

@@ -84,7 +84,7 @@ fn module_init_common(prefix: &str, attr: TokenStream, item: TokenStream) -> Tok
         TokenStream::from_str(&format!(
             r#"
                 #[no_mangle]
-                pub extern "C" fn {module_symbol}_{prefix}Init(interp: *const Interpreter) -> TclStatus {{
+                pub extern "C" fn {module_symbol}_{prefix}Init(interp: *const ::rtea::ffi::Tcl_Interp) -> TclStatus {{
                     Interpreter::from_raw(interp)
                         .map(|interp| {init_fn}(interp)
                             .and(interp.provide_package("{module_tcl}", {version}))
@@ -211,7 +211,7 @@ fn module_unload_common(prefix: &str, attr: TokenStream, item: TokenStream) -> T
         TokenStream::from_str(&format!(
             r#"
                 #[no_mangle]
-                pub extern "C" fn {module_symbol}_{prefix}Unload(interp: *const Interpreter, flags: TclUnloadFlag) -> TclStatus {{
+                pub extern "C" fn {module_symbol}_{prefix}Unload(interp: *const ::rtea::ffi::Tcl_Interp, flags: TclUnloadFlag) -> TclStatus {{
                     Interpreter::from_raw(interp)
                         .map(|interp| {unload_fn}(interp, flags)
                             .unwrap_or_else(|s| {{interp.set_result(&s); TclStatus::Error}}))

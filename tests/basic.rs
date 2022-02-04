@@ -12,7 +12,7 @@ fn eval() -> Result<(), String> {
     let interp = test_interp.as_ref();
     assert_eq!(interp.eval("expr 5 + 5")?, TclStatus::Ok);
     let result = interp.get_obj_result();
-    assert_eq!(interp.get_string(result), "10");
+    assert_eq!(interp.get_string(&result), "10");
     Ok(())
 }
 
@@ -33,12 +33,12 @@ fn create_command() -> Result<(), String> {
     interp.create_command("mycmd", cmd)?;
     interp.eval("mycmd not_fail")?;
     let result = interp.get_obj_result();
-    assert_eq!(interp.get_string(result), "pass");
+    assert_eq!(interp.get_string(&result), "pass");
 
     let eval = interp
         .eval("mycmd fail")
         .expect_err("cmd should error on 'fail' as argv[1]");
-    let result = interp.get_string(interp.get_obj_result());
+    let result = interp.get_string(&interp.get_obj_result());
     assert_eq!(eval, result);
 
     Ok(())
@@ -61,10 +61,10 @@ fn create_stateful_command() -> Result<(), String> {
         Ok(TclStatus::Ok)
     }
 
-    StatefulCommand::new(cmd, RefCell::<usize>::new(0)).attach_command(interp, "counter")?;
+    interp.attach_stateful_command("counter",RefCell::<usize>::new(0), cmd)?;
     for i in 0..10 {
         interp.eval("counter")?;
-        assert_eq!(i.to_string(), interp.get_string(interp.get_obj_result()));
+        assert_eq!(i.to_string(), interp.get_string(&interp.get_obj_result()));
     }
 
     Ok(())
@@ -88,7 +88,7 @@ fn init_wrapper() -> Result<(), String> {
     let interp = test_interp.as_ref();
     interp.eval("mycmd")?;
     let result = interp.get_obj_result();
-    assert_eq!(interp.get_string(result), "pass");
+    assert_eq!(interp.get_string(&result), "pass");
 
     Ok(())
 }

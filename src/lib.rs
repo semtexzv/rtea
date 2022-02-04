@@ -1,3 +1,4 @@
+#![feature(core_intrinsics)]
 //! rtea tries to be the Rust [TEA](https://www.tcl.tk/doc/tea/TEAOverview.html)
 //! ([Tcl](https://www.tcl.tk) Extension Architecture).
 //!
@@ -58,6 +59,7 @@
 
 mod interpreter;
 mod object;
+pub mod ffi;
 
 pub use interpreter::*;
 pub use object::*;
